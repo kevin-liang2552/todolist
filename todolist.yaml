@@ -1,0 +1,131 @@
+openapi: "3.0.0"
+info:
+  description: "Swagger file for basic TODO list backend"
+  version: "1.0.0"
+  title: "TODO list backend"
+tags:
+- name: "tasks"
+  description: "Everything about your managing tasks"
+
+components:
+  schemas:
+    Task:
+      properties:
+        id:
+          type: string
+        task:
+          type: string
+        complete:
+          type: boolean
+      example:
+        id: 'ca4fd89e-6879-4859-8e79-45df01dd7982'
+        task: 'Get milk'
+        complete: false 
+        
+paths:
+  /tasks:
+    get:
+      summary: Returns a list of tasks
+      tags:
+        - tasks
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+            - complete
+            - incomplete
+        description: The the type of list you want returned.
+      responses:
+        '200':
+          description: Returns a 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+    post:
+      summary: Adds a new task
+      tags:
+        - tasks
+      responses:
+        '200':
+          description: Returns the ID of the newly added task.
+          content:
+            application/json:
+              schema:
+                type: string
+                example:
+                  id: 'ca4fd89e-6879-4859-8e79-45df01dd7982'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+          
+    delete:
+      summary: Removes all tasks of a certain type
+      tags:
+        - tasks
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  
+  /tasks/{taskID}:
+    patch:
+      summary: Changes the task from complete to incomplete or vice versa
+      parameters:
+        - in: path
+          name: taskID
+          required: true
+          schema:
+            type: string
+          description: The ID of the task to be changed.
+        - in: query
+          name: status
+          required: true
+          schema:
+            type: string
+            enum:
+              - complete
+              - incomplete
+          description: The status the task is to be changed into.
+      tags:
+        - tasks
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+          
+    delete:
+      summary: Deletes the specified task
+      parameters:
+        - in: path
+          name: taskID
+          required: true
+          schema:
+            type: string
+          description: The ID of the task to be changed.
+      tags:
+        - tasks
+      responses:
+        '200': 
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error

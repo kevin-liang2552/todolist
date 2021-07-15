@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.21",
-    "@types/node": "^15.0.1",
+    "@types/node": "^16.3.2",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "esbuild": "^0.11.11",
@@ -46,6 +46,9 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "@types/validator": "^13.6.3",
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.5"
   }
 }

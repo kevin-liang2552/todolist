@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize";
 
 const sequelize = new Sequelize("mysql://root:@localhost:3306/tododb");
 
-export const testingConnection = async () => {
+export const database = async () => {
     try {
         await sequelize.authenticate();
         console.log('Connection has been established successfully.');

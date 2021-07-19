@@ -5,7 +5,7 @@ const Task = (sequelize: Sequelize) => {
     const taskModel = sequelize.define('task', {
         id: {
             primaryKey: true,
-            type: DataTypes.STRING,
+            type: DataTypes.UUID,
             allowNull: false
         },
         task: {

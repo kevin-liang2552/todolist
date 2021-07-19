@@ -1,16 +1,22 @@
 #!/usr/bin/env node
-import {database} from './models/index'
+//import {database} from './models/index'
 import express from 'express';
+
+import router from './routes/routes';
 
 const app = express();
 const port = 8080;
 
-database();
+function loggerMiddleware(request: express.Request, _response: express.Response, next: express.NextFunction) {
+  console.log(`${request.method} ${request.path}`);
+  next();
+}
+
+//database();
+app.use(loggerMiddleware);
 
 app.listen(port, () => {
   console.log(`Hello World! Running on port ${port}`);
 });
 
-app.get('/', (_req, res) => {
-    res.send('Well done!');
-})
+app.use('/', router);

@@ -1,22 +1,38 @@
 #!/usr/bin/env node
-//import {database} from './models/index'
 import express from 'express';
 
+import database from './database/index'
 import mainRouter from './routes/index';
 
 const app = express();
 const port = 8080;
 
-function loggerMiddleware(request: express.Request, _response: express.Response, next: express.NextFunction) {
+const loggerMiddleware = (request: express.Request, _response: express.Response, next: express.NextFunction) => {
   console.log(`${request.method} ${request.path}`);
   next();
 }
 
-//database();
-app.use(loggerMiddleware);
+const authenticateDatabase = async () => {
+  try {
+      await database.authenticate();
+      console.log('Connection has been established successfully.');
 
-app.listen(port, () => {
-  console.log(`Hello World! Running on port ${port}`);
-});
+    } catch (error) {
+      console.error('Unable to connect to the database:', error);
+    }
+}
 
-app.use('/', mainRouter);
+const init = () => {
+
+  authenticateDatabase();
+  app.use(loggerMiddleware);
+
+  app.listen(port, () => {
+    console.log(`Hello World! Running on port ${port}`);
+  });
+  
+  app.use('/', mainRouter);
+  
+}
+
+init();

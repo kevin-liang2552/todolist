@@ -2,7 +2,7 @@
 //import {database} from './models/index'
 import express from 'express';
 
-import router from './routes/routes';
+import mainRouter from './routes/index';
 
 const app = express();
 const port = 8080;
@@ -19,4 +19,4 @@ app.listen(port, () => {
   console.log(`Hello World! Running on port ${port}`);
 });
 
-app.use('/', router);
+app.use('/', mainRouter);

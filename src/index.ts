@@ -15,11 +15,12 @@ const authenticateDatabase = async () => {
     }
 }
 
-const init = () => {
-  authenticateDatabase();
+const init = async () => {
+
+  await authenticateDatabase();
   app.listen(port, () => {
     console.log(`Hello World! Running on port ${port}`);
   }); 
 }
 
-init();
+Promise.resolve(init());

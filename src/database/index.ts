@@ -1,8 +1,15 @@
 import { Sequelize } from "sequelize";
 import Tasks from "./models/task";
+import dotenv from "dotenv";
 
-const database = new Sequelize("mysql://root:@localhost:3306/tododb", {logging:false});
+dotenv.config({path: __dirname + '/../../.env.local'});
 
-Tasks(database);
+const database = new Sequelize(`mysql://${process.env.DB_USER}:@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, {logging:false});
+
+const setupDatabase = () => {
+    Tasks(database);
+}
+
+setupDatabase();
 
 export = database;

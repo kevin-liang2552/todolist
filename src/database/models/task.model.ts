@@ -1,6 +1,6 @@
 import {DataTypes, Sequelize} from "sequelize";
 
-const Task = (sequelize: Sequelize) => {
+const Task = async (sequelize: Sequelize) => {
 
     const taskModel = sequelize.define('task', {
         id: {
@@ -18,7 +18,7 @@ const Task = (sequelize: Sequelize) => {
         }
     });
 
-    taskModel.sync();
+    await taskModel.sync();
 }
 
 export = Task;

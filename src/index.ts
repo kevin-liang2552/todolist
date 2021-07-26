@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-import database from './database/index'
+import sequelize from './database/index'
 import app from './server/app'
 
 const port = 8080;
 
 const authenticateDatabase = async () => {
   try {
-      await database.authenticate();
+      await sequelize.authenticate();
       console.log('Connection has been established successfully.');
 
     } catch (error) {

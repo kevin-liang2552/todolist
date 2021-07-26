@@ -6,6 +6,7 @@ const Task = async (sequelize: Sequelize) => {
         id: {
             primaryKey: true,
             type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             allowNull: false
         },
         task: {
@@ -18,7 +19,12 @@ const Task = async (sequelize: Sequelize) => {
         }
     });
 
-    await taskModel.sync();
+    await taskModel.sync({force: true}).then(() => {
+        return taskModel.create({
+            task: 'Buy Milk',
+            status: 'incomplete'
+          });
+    });
 }
 
 export = Task;

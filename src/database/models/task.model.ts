@@ -1,6 +1,6 @@
-import {DataTypes, Sequelize} from "sequelize";
+import { DataTypes, Sequelize} from "sequelize";
 
-const Task = async (sequelize: Sequelize) => {
+export const Task = async (sequelize: Sequelize) => {
 
     const taskModel = sequelize.define('task', {
         id: {
@@ -19,12 +19,13 @@ const Task = async (sequelize: Sequelize) => {
         }
     });
 
+    //Currently doing this to add data to the database - attempted to do seeds but couldn't get it working.
     await taskModel.sync({force: true}).then(() => {
-        return taskModel.create({
-            task: 'Buy Milk',
-            status: 'incomplete'
-          });
+        return taskModel.bulkCreate([
+            {task: 'Buy Milk',
+            status: 'incomplete'},
+            {task: 'Buy Eggs',
+            status: 'complete'},
+        ]);
     });
 }
-
-export = Task;

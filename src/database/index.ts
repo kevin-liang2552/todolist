@@ -1,5 +1,5 @@
 import {Sequelize} from "sequelize";
-import Task from "./models/task.model";
+import {Task} from "./models/task.model";
 import dotenv from "dotenv";
 
 dotenv.config({path: __dirname + '/../../.env.local'});

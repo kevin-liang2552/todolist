@@ -15,12 +15,18 @@ components:
           type: string
         task:
           type: string
-        complete:
-          type: boolean
+        status:
+          type: string
       example:
         id: 'ca4fd89e-6879-4859-8e79-45df01dd7982'
         task: 'Get milk'
         complete: false 
+    TaskRequest:
+      properties:
+        task:
+          type: string
+      example:
+        task: 'Get milk'
         
 paths:
   /tasks:
@@ -56,6 +62,13 @@ paths:
       summary: Adds a new task
       tags:
         - tasks
+      requestBody:
+        description: Requires a string describing task.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
       responses:
         '200':
           description: Returns the ID of the newly added task.

@@ -1,8 +1,16 @@
-import { DataTypes, Sequelize} from "sequelize";
+import { DataTypes, ModelDefined, Optional, Sequelize} from "sequelize";
+export interface TaskAttributes {
+    id: number;
+    task: string;
+    status: string;
+}
+
+export interface TaskCreationAttributes extends Optional<TaskAttributes, "id"> {}
+
 
 export const Task = async (sequelize: Sequelize) => {
 
-    const taskModel = sequelize.define('task', {
+    const taskModel : ModelDefined<TaskAttributes, TaskCreationAttributes> = sequelize.define('task', {
         id: {
             primaryKey: true,
             type: DataTypes.UUID,

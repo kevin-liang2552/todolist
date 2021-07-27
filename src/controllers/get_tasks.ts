@@ -1,13 +1,11 @@
-import { models } from '../database/index';
-import { Model } from 'sequelize';
-import { TaskAttributes, TaskCreationAttributes } from '../database/models/task.model';
+import { taskModel } from "../database/models/task.model";
 
-export const get_all_tasks = async (): Promise<Model<TaskAttributes,TaskCreationAttributes>[]>=> {
-    return await models.task.findAll();
+export const get_all_tasks = async () => {
+    return await taskModel.findAll();
 }
 
 export const get_tasks = async (status:string) => {
-    return await models.task.findAll({
+    return await taskModel.findAll({
         where: {status: status}
     });
 }

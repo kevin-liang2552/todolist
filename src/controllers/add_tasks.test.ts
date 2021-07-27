@@ -13,6 +13,8 @@ const testTasks = [
     status: 'incomplete'},
 ];
 
+const newTask = 'Buy chocolate';
+
 beforeAll(async ()=>{
     await models.task.sync({force: true});
     
@@ -30,11 +32,22 @@ afterAll(()=>{
 describe('add_tasks', async ()=> {
     test('Should create a new task', async () => {
 
-        const newTaskID = await _.add_task('Buy chocolate');
-        const tasks = await get_all_tasks();
+        const newTaskID = await _.add_task(newTask);
+        const newCreatedTask = {id: newTaskID, task:newTaskID, status: 'incomplete'};
 
-        expect(tasks.length).toBe(5);
+        const data = await get_all_tasks();
 
+        expect(data.length).toBe(5);
+
+        // The following section has typescript issues - models do not contain the correct attributes for some reason.
+        /*
+        let tasks = [];
+        data.forEach((a)=>{
+            tasks.push({id: a.get('id'), task: a.get('task'), status: a.get('status')});
+        });
+
+        expect(tasks).toContainEqual(newCreatedTask);
+        */
     });
 
 });

@@ -5,6 +5,7 @@
     "moduleResolution": "node",
     "declaration": true,
     "strict": true,
+    "strictPropertyInitialization": false,
     "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
     "strictNullChecks": true /* Enable strict null checks. */,
     "strictFunctionTypes": true /* Enable strict checking of function types. */,
@@ -19,13 +20,9 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "./dist/tsc/",
-    "types": [
-      "node",
-      "jest"
-    ],
     "lib": [
-      "ES6",
-      "DOM"
+      "es2017",
+      "esnext.asynciterable"
     ]
   },
   "include": [

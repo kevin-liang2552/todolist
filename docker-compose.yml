@@ -1,0 +1,36 @@
+version: "3"
+services:
+  app:
+    container_name: todolist
+    restart: "always"
+    build: .
+    ports:
+      - "9000:9000"
+    links:
+      - mysql
+    networks: 
+      - backend
+    environment:
+      - PORT=9000
+      - DB_HOST=mysql
+      - DB_USER=kevin
+      - DB_PASSWORD=123
+      - DB_PORT=3306
+      - DB_NAME=tododb
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    networks: 
+      - backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=roothere
+      - MYSQL_USER=kevin
+      - MYSQL_PASSWORD=123
+      - MYSQL_DATABASE=tododb
+
+networks: 
+  backend:
+    driver: "bridge"

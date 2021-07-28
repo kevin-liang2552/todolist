@@ -7,4 +7,5 @@ const loggerMiddleware = (request: express.Request, _response: express.Response,
 
 export function applyMiddleware(app: express.Express): void {
     app.use(loggerMiddleware);
+    app.use(express.json());
 }

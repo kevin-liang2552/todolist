@@ -21,3 +21,16 @@ export const getTaskByStatus = async (req: Request, res: Response): Promise<void
   }
 
 }
+
+export const addTask = async (req: Request, res: Response): Promise<void> => {
+    
+  const data: string = req.body?.task;
+
+  if (data === undefined){
+    res.status(400).send('Missing required field: task');
+  } else {
+    const newTaskID = await taskService.addTask(data);
+    res.status(200).send(newTaskID);
+  }
+
+}

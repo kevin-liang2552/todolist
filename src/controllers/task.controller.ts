@@ -35,28 +35,20 @@ export const addTask = async (req: Request, res: Response): Promise<void> => {
 
 }
 
-export const deleteTaskByID = async (req: Request, res: Response): Promise<void> => {
+// Unsure if there is a better way to do this.
+export const deleteTask = async (req: Request, res: Response): Promise<void> => {
     
-  const id = req.params?.id;
+  const type = req.params?.type;
 
-  try{
-    await taskService.deleteTaskByID(id);
-    res.status(200).send();
-    
-  }catch(err){
-    res.status(400).send(err);
-  }
-
-}
-
-export const deleteTaskByStatus = async (req: Request, res: Response): Promise<void> => {
-    
-  const status: string = req.body?.status;
-
-  if (status !== ETaskStatus.Complete && status !== ETaskStatus.Incomplete) {
-    res.status(400).send('Not a valid status');
-  } else {
-    const tasks = await taskService.deleteTaskByStatus(status);
+  if(type !== ETaskStatus.Complete && type !== ETaskStatus.Incomplete){
+    try{
+      await taskService.deleteTaskByID(type);
+      res.status(200).send();
+    }catch(err){
+      res.status(400).send(err);
+    }
+  }else{
+    const tasks = await taskService.deleteTaskByStatus(type);
     res.status(200).send(tasks);
   }
 

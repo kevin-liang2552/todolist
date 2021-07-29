@@ -17,3 +17,5 @@ Then connect to your mysql in localhost, execute the sql to have the structure a
 
 ## todo
 - migration: https://sequelize.org/master/manual/migrations.html
+- fix and setup swagger UI: https://swagger.io/tools/swagger-ui/
+- setup CI/CD with gitlab: https://docs.gitlab.com/ee/ci/services/mysql.html

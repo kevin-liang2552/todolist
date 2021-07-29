@@ -1,6 +1,7 @@
 import { taskService } from '.';
 import { Task } from '../models/task.model';
 import { sequelize } from './database';
+import '../config';
 
 const testTasks = [
   {task: 'Buy eggs',
@@ -13,17 +14,16 @@ const testTasks = [
   status: 'incomplete'},
 ];
 
-
 beforeAll(async ()=>{
-await Task.sync({force: true})
-await Task.destroy({
-    truncate: true
-})
-await Task.bulkCreate(testTasks);
+  await Task.sync({force: true})
+  await Task.destroy({
+      truncate: true
+  })
+  await Task.bulkCreate(testTasks);
 });
 
 afterAll(()=>{
-sequelize.close();
+  sequelize.close();
 });
 
 describe('getTaskByStatus', ()=> {

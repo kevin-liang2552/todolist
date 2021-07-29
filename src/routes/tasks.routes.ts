@@ -9,4 +9,5 @@ export const setup = (router: express.Router): void => {
 
     router.get('/tasks/:status', taskController.getTaskByStatus);
     router.delete('/tasks/:id', taskController.deleteTaskByID);
+    router.patch('/tasks/:id', taskController.updateTask);
 }

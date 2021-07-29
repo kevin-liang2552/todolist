@@ -44,10 +44,24 @@ export const deleteTaskByID = async (id: string): Promise<void> => {
 }
 
 export const deleteTaskByStatus = async (status: string): Promise<void> => {
+    await Task.destroy({
+        where:{ status }
+    });
+}
+
+export const updateTask = async (id: string): Promise<void> => {
     try{
-        await Task.destroy({
-            where:{ status }
-        });
+        const task = await getTaskByID(id);
+        if(task.status === ETaskStatus.Incomplete){
+            await Task.update({status: ETaskStatus.Complete},{
+                where:{ id }
+            });
+        }else{
+            await Task.update({status: ETaskStatus.Incomplete},{
+                where:{ id }
+            });
+        }
+        
     }catch(err){
         return(err);
     }

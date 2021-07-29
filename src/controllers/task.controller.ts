@@ -34,3 +34,30 @@ export const addTask = async (req: Request, res: Response): Promise<void> => {
   }
 
 }
+
+export const deleteTaskByID = async (req: Request, res: Response): Promise<void> => {
+    
+  const id = req.params?.id;
+
+  try{
+    await taskService.deleteTaskByID(id);
+    res.status(200).send();
+    
+  }catch(err){
+    res.status(400).send(err);
+  }
+
+}
+
+export const deleteTaskByStatus = async (req: Request, res: Response): Promise<void> => {
+    
+  const status: string = req.body?.status;
+
+  if (status !== ETaskStatus.Complete && status !== ETaskStatus.Incomplete) {
+    res.status(400).send('Not a valid status');
+  } else {
+    const tasks = await taskService.deleteTaskByStatus(status);
+    res.status(200).send(tasks);
+  }
+
+}

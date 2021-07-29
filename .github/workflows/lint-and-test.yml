@@ -1,25 +1,30 @@
-name: Lint and test
+name: Test
 
 on: [push, pull_request]
 
 jobs:
-  build_and_test:
+  docker:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        nodejs: [10, 12, 14]
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v1
 
-    # https://github.com/actions/setup-node
-    - uses: actions/setup-node@v2-beta
+    - name: Start containers
+      run: docker-compose -f "docker-compose.yml" up -d mysql
+
+    - name: Install node
+      uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.nodejs }}
+        node-version: 14.x
 
-    - run: yarn install
-    - run: yarn add -D esbuild
-    - run: yarn test
-    - run: yarn lint
-    - run: yarn build-all
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: DOTENV=.env.local npx jest
+
+    - name: Stop containers
+      if: always()
+      run: docker-compose -f "docker-compose.yml" down

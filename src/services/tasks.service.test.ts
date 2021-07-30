@@ -73,6 +73,11 @@ describe('getTaskByID', ()=> {
 
   });
 
+  test('Should return with an error message', async() => {    
+    const data = await taskService.getTaskByID('asdf');
+    expect(data).toBe('Could not find task ID in database');
+  });
+
 });
 
 describe('addTask', ()=> {
@@ -130,6 +135,11 @@ describe('deleteTaskByID', ()=> {
     });
   });
 
+  test('Should return with an error message', async() => {    
+    const data = await taskService.updateTask('asdf');
+    expect(data).toBe('Could not find task ID in database');
+  });
+
 });
 
 describe('updateTask', ()=> {
@@ -147,6 +157,11 @@ describe('updateTask', ()=> {
     const updatedTask = {id: newData.id, task: newData.task, status: newData.status};
     expect(updatedTask).toStrictEqual({id: newTaskID, task:newTask, status: ETaskStatus.Complete});
 
+  });
+
+  test('Should return with an error message', async() => {    
+    const data = await taskService.updateTask('asdf');
+    expect(data).toBe('Could not find task ID in database');
   });
 
 });

@@ -1,5 +1,5 @@
-import { Task } from '../models/task.model';
-import { ETaskStatus } from '../models/share';
+import { Task } from '../database/models/task.model';
+import { ETaskStatus } from '../database/models/share';
 
 export const getAllTasks = async (): Promise<Task[]> => {
     return await Task.findAll();

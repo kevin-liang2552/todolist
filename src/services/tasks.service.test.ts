@@ -1,7 +1,7 @@
 import { taskService } from '.';
-import { Task } from '../models/task.model';
-import { sequelize } from './database';
-import { ETaskStatus } from '../models/share';
+import { Task } from '../database/models/task.model';
+import { sequelize } from '../database/database';
+import { ETaskStatus } from '../database/models/share';
 import '../config';
 
 const testTasks = [

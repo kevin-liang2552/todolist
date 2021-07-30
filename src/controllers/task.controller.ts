@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ETaskStatus } from '../models/share';
+import { ETaskStatus } from '../database/models/share';
 import { taskService } from '../services'
 
 export const getAllTasks = async (_: any, res: Response): Promise<void> => {

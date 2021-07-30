@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../services/database";
+import { sequelize } from "../database";
 import { ETaskStatus } from "./share";
 
 export class Task extends Model {

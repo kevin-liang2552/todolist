@@ -26,6 +26,18 @@ cd to-your-root-project-folder
 DOTENV=.env.local npx jest
 ```
 
+# Seeding Database
+Make sure you have sequelize-cli installed.
+
+Run the command below:
+
+```bash
+cd to-your-root-project-folder
+
+# check that the mysql docker container is running. If it is, run the command below
+DOTENV=.env.local npx sequelize-cli db:seed:all
+```
+
 ## todo
 - migration: https://sequelize.org/master/manual/migrations.html
 - fix and setup swagger UI: https://swagger.io/tools/swagger-ui/

@@ -66,6 +66,11 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
   const status: string = req.params?.status;
 
   try{
+
+    if (status !== ETaskStatus.Complete && status !== ETaskStatus.Incomplete) {
+      throw(new Error('Not a valid Status'));
+    } 
+    
     await taskService.updateTask(id, status);
     res.status(200).send();
     

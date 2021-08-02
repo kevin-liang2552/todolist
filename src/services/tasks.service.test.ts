@@ -141,12 +141,11 @@ describe('deleteTaskByID', ()=> {
       expect(testTasks).toContainEqual({task: task.task, status: task.status});
     });
   });
-  /*
+  
   test('Should return with an error message', async() => {    
-    const data = await taskService.updateTask('asdf');
-    expect(data).toThrowError('Could not find task ID in database');
+    await expect(taskService.deleteTaskByID('asdf')).rejects.toThrowError(`Could not find asdf in database`);
   });
-  */
+  
 });
 
 describe('updateTask', ()=> {
@@ -172,9 +171,9 @@ describe('updateTask', ()=> {
 
   });
 
-  /*
+  
   test('Should return with an error message', async() => {    
-    expect(await taskService.updateTask).toThrow(`Could not find asdf in database`)
+    await expect(taskService.updateTask('asdf', 'complete')).rejects.toThrowError(`Could not find asdf in database`);
   });
-  */
+  
 });

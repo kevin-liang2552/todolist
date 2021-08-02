@@ -17,19 +17,23 @@ const testTasks = [
 
 const newTask = 'Buy chocolate';
 
-beforeEach(async ()=>{
-  await Task.sync({force: true})
+const instantiateDB = async () => {
+  await Task.sync();
   await Task.destroy({
       truncate: true
-  })
+  });
   await Task.bulkCreate(testTasks);
+}
+
+beforeEach(async ()=>{
+  await instantiateDB();
 });
 
 afterAll(()=>{
   sequelize.close();
 });
 
-describe('getTaskByStatus', async ()=> {
+describe('getTaskByStatus', ()=> {
 
   test('Should return only incomplete', async() => {        
     const tasks = await taskService.getTaskByStatus(ETaskStatus.Incomplete); 
@@ -50,7 +54,7 @@ describe('getTaskByStatus', async ()=> {
   });
 });
 
-describe('getAllTasks', async ()=> {
+describe('getAllTasks', ()=> {
 
   test('Should return all tasks in the database', async() => {    
     const tasks = await taskService.getAllTasks(); 
@@ -61,7 +65,7 @@ describe('getAllTasks', async ()=> {
   });
 });
 
-describe('getTaskByID', async ()=> {
+describe('getTaskByID', ()=> {
 
   test('Should return a task of a specific task of an ID in the database', async() => {    
     const newCreatedTask = await taskService.addTask(newTask); 
@@ -84,7 +88,7 @@ describe('getTaskByID', async ()=> {
 
 });
 
-describe('addTask', async ()=> {
+describe('addTask', ()=> {
 
   test('Should add a task to the database', async() => {    
     const newCreatedTask = await taskService.addTask(newTask); 
@@ -105,7 +109,7 @@ describe('addTask', async ()=> {
 
 });
 
-describe('deleteTaskByStatus', async ()=> {
+describe('deleteTaskByStatus', ()=> {
 
   test('Should delete all complete tasks in the database', async() => {    
     await taskService.deleteTaskByStatus(ETaskStatus.Complete);
@@ -125,7 +129,7 @@ describe('deleteTaskByStatus', async ()=> {
 
 });
 
-describe('deleteTaskByID', async ()=> {
+describe('deleteTaskByID', ()=> {
 
   test('Should delete a specific task in the database', async() => {    
     const newTaskID = await taskService.addTask(newTask); 
@@ -148,7 +152,7 @@ describe('deleteTaskByID', async ()=> {
   
 });
 
-describe('updateTask', async()=> {
+describe('updateTask', ()=> {
 
   test('Should update the status of a task from "incomplete" to "complete"', async() => {    
     const newCreatedTask = await taskService.addTask(newTask); 

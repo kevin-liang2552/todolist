@@ -30,13 +30,13 @@ export const deleteTaskByID = async (id: string): Promise<void> => {
         throw new Error(`Could not find task ${id} in database`);
     }
     
-    await Task.destroy({
+    Task.destroy({
         where:{ id }
     });
 }
 
 export const deleteTaskByStatus = async (status: string): Promise<void> => {
-    await Task.destroy({
+    Task.destroy({
         where:{ status }
     });
 }
@@ -49,7 +49,7 @@ export const updateTask = async (id: string, status: string): Promise<void> => {
         throw new Error(`Could not find task ${id} in database`);
     }
 
-    await Task.update({status: status},{
+    Task.update({status: status},{
         where:{ id }
     });
 

@@ -24,20 +24,15 @@ export const addTask = async (task: string): Promise<Task> => {
 }
 
 export const deleteTaskByID = async (id: string): Promise<void> => {
-    try{
-        const task = await getTaskByID(id);
-        
-        if(task === null){
-            throw new Error(`Could not find ${id} in database`);
-        }
-        
-        await Task.destroy({
-            where:{ id }
-        });
-
-    }catch(err){
-        return(err);
+    const task = await getTaskByID(id);
+    
+    if(task === null){
+        throw new Error(`Could not find ${id} in database`);
     }
+    
+    await Task.destroy({
+        where:{ id }
+    });
 }
 
 export const deleteTaskByStatus = async (status: string): Promise<void> => {
@@ -46,7 +41,7 @@ export const deleteTaskByStatus = async (status: string): Promise<void> => {
     });
 }
 
-export const updateTask = async (id: string): Promise<void> => {
+export const updateTask = async (id: string, status: string): Promise<void> => {
 
     const task = await getTaskByID(id);
 
@@ -54,14 +49,8 @@ export const updateTask = async (id: string): Promise<void> => {
         throw new Error(`Could not find ${id} in database`);
     }
 
-    if(task.status === ETaskStatus.Incomplete){
-        await Task.update({status: ETaskStatus.Complete},{
-            where:{ id }
-        });
-    }else{
-        await Task.update({status: ETaskStatus.Incomplete},{
-            where:{ id }
-        });
-    } 
+    await Task.update({status: status},{
+        where:{ id }
+    });
 
 }

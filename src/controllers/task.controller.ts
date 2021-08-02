@@ -63,9 +63,10 @@ export const deleteTaskByStatus = async (req: Request, res: Response): Promise<v
 export const updateTask = async (req: Request, res: Response): Promise<void> => {
     
   const id: string = req.params?.id;
+  const status: string = req.params?.status;
 
   try{
-    await taskService.updateTask(id);
+    await taskService.updateTask(id, status);
     res.status(200).send();
     
   }catch(err){

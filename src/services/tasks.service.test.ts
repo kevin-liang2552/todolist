@@ -161,7 +161,7 @@ describe('updateTask', ()=> {
     const foundTask = {id: data.id, task: data.task, status: data.status};
     expect(foundTask).toStrictEqual({id: newCreatedTask.id, task: newCreatedTask.task, status: ETaskStatus.Incomplete});
 
-    await taskService.updateTask(foundTask.id);
+    await taskService.updateTask(foundTask.id, ETaskStatus.Complete);
     const newData = await taskService.getTaskByID(newCreatedTask.id);
     if (newData === null) {
       throw new Error("Found task is null");

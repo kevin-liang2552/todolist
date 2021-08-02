@@ -27,7 +27,7 @@ export const deleteTaskByID = async (id: string): Promise<void> => {
     const task = await getTaskByID(id);
     
     if(!task){
-        throw new Error(`Could not find ${id} in database`);
+        throw new Error(`Could not find task ${id} in database`);
     }
     
     await Task.destroy({
@@ -46,7 +46,7 @@ export const updateTask = async (id: string, status: string): Promise<void> => {
     const task = await getTaskByID(id);
 
     if(!task){
-        throw new Error(`Could not find ${id} in database`);
+        throw new Error(`Could not find task ${id} in database`);
     }
 
     await Task.update({status: status},{

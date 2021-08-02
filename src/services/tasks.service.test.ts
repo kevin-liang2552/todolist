@@ -17,6 +17,13 @@ const testTasks = [
 
 const newTask = 'Buy chocolate';
 
+// Known Jest async bug:
+// https://github.com/facebook/jest/issues/6619
+// Setting longer timeout to encourage tests to work.
+// Sometimes tests will fail due to async issues. Running again makes them work.
+
+jest.setTimeout(10000);
+
 const instantiateDB = async () => {
   await Task.sync();
   await Task.destroy({

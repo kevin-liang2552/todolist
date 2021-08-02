@@ -54,8 +54,8 @@ export const deleteTaskByStatus = async (req: Request, res: Response): Promise<v
   if (status !== ETaskStatus.Complete && status !== ETaskStatus.Incomplete) {
     res.status(400).send('Not a valid status');
   } else {
-    const error = await taskService.deleteTaskByStatus(status);
-    res.status(200).send(error);
+    await taskService.deleteTaskByStatus(status);
+    res.status(200).send();
   }
 
 }

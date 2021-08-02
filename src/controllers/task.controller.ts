@@ -30,7 +30,7 @@ export const addTask = async (req: Request, res: Response): Promise<void> => {
     res.status(400).send('Missing required field: task');
   } else {
     const newTaskID = await taskService.addTask(data);
-    res.status(200).send(newTaskID);
+    res.status(200).send({ id: newTaskID.id });
   }
 
 }
@@ -54,8 +54,8 @@ export const deleteTaskByStatus = async (req: Request, res: Response): Promise<v
   if (status !== ETaskStatus.Complete && status !== ETaskStatus.Incomplete) {
     res.status(400).send('Not a valid status');
   } else {
-    const tasks = await taskService.deleteTaskByStatus(status);
-    res.status(200).send(tasks);
+    const error = await taskService.deleteTaskByStatus(status);
+    res.status(200).send(error);
   }
 
 }

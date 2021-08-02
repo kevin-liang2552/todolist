@@ -2,42 +2,33 @@ import { Task } from '../models/task.model';
 import { ETaskStatus } from '../models/share';
 
 export const getAllTasks = async (): Promise<Task[]> => {
-    return await Task.findAll();
+    return Task.findAll();
 }
 
 export const getTaskByStatus = async (status: string): Promise<Task[]> => {
-    return await Task.findAll({
+    return Task.findAll({
         where: { status }
     });
 }
 
-export const getTaskByID = async (id: string): Promise<Task> => {
-    try{
-        const task = await Task.findOne({
-            where: { id }
-        });
+export const getTaskByID = async (id: string): Promise<Task | null> => {
 
-        if(task !== null){
-            return task;
-        }else{
-            throw('Could not find task ID in database');
-        }   
-    }catch(err){
-        return(err);
-    }
+    return Task.findOne({
+        where: { id }
+    });
 }
 
-export const addTask = async (task: string): Promise<string> => {
+export const addTask = async (task: string): Promise<Task> => {
     const newTask = await Task.create({task: task, status: ETaskStatus.Incomplete});
-    return(newTask.id);
+    return(newTask);
 }
 
 export const deleteTaskByID = async (id: string): Promise<void> => {
     try{
         const task = await getTaskByID(id);
-    
-        if(task.id === undefined){
-            throw(task);
+        
+        if(task === null){
+            throw new Error(`Could not find ${id} in database`);
         }
         
         await Task.destroy({
@@ -56,23 +47,21 @@ export const deleteTaskByStatus = async (status: string): Promise<void> => {
 }
 
 export const updateTask = async (id: string): Promise<void> => {
-    try{
-        const task = await getTaskByID(id);
 
-        if(task.status === undefined){
-            throw(task);
-        }
+    const task = await getTaskByID(id);
 
-        if(task.status === ETaskStatus.Incomplete){
-            await Task.update({status: ETaskStatus.Complete},{
-                where:{ id }
-            });
-        }else{
-            await Task.update({status: ETaskStatus.Incomplete},{
-                where:{ id }
-            });
-        } 
-    }catch(err){
-        return(err);
+    if(task === null){
+        throw new Error(`Could not find ${id} in database`);
     }
+
+    if(task.status === ETaskStatus.Incomplete){
+        await Task.update({status: ETaskStatus.Complete},{
+            where:{ id }
+        });
+    }else{
+        await Task.update({status: ETaskStatus.Incomplete},{
+            where:{ id }
+        });
+    } 
+
 }

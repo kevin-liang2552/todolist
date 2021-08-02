@@ -29,7 +29,7 @@ afterAll(()=>{
   sequelize.close();
 });
 
-describe('getTaskByStatus', ()=> {
+describe('getTaskByStatus', async ()=> {
 
   test('Should return only incomplete', async() => {        
     const tasks = await taskService.getTaskByStatus(ETaskStatus.Incomplete); 
@@ -50,7 +50,7 @@ describe('getTaskByStatus', ()=> {
   });
 });
 
-describe('getAllTasks', ()=> {
+describe('getAllTasks', async ()=> {
 
   test('Should return all tasks in the database', async() => {    
     const tasks = await taskService.getAllTasks(); 
@@ -61,7 +61,7 @@ describe('getAllTasks', ()=> {
   });
 });
 
-describe('getTaskByID', ()=> {
+describe('getTaskByID', async ()=> {
 
   test('Should return a task of a specific task of an ID in the database', async() => {    
     const newCreatedTask = await taskService.addTask(newTask); 
@@ -84,7 +84,7 @@ describe('getTaskByID', ()=> {
 
 });
 
-describe('addTask', ()=> {
+describe('addTask', async ()=> {
 
   test('Should add a task to the database', async() => {    
     const newCreatedTask = await taskService.addTask(newTask); 
@@ -105,7 +105,7 @@ describe('addTask', ()=> {
 
 });
 
-describe('deleteTaskByStatus', ()=> {
+describe('deleteTaskByStatus', async ()=> {
 
   test('Should delete all complete tasks in the database', async() => {    
     await taskService.deleteTaskByStatus(ETaskStatus.Complete);
@@ -125,7 +125,7 @@ describe('deleteTaskByStatus', ()=> {
 
 });
 
-describe('deleteTaskByID', ()=> {
+describe('deleteTaskByID', async ()=> {
 
   test('Should delete a specific task in the database', async() => {    
     const newTaskID = await taskService.addTask(newTask); 
@@ -143,12 +143,12 @@ describe('deleteTaskByID', ()=> {
   });
   
   test('Should return with an error message', async() => {    
-    await expect(taskService.deleteTaskByID('asdf')).rejects.toThrowError(`Could not find asdf in database`);
+    await expect(taskService.deleteTaskByID('asdf')).rejects.toThrowError(`Could not find task asdf in database`);
   });
   
 });
 
-describe('updateTask', ()=> {
+describe('updateTask', async()=> {
 
   test('Should update the status of a task from "incomplete" to "complete"', async() => {    
     const newCreatedTask = await taskService.addTask(newTask); 
@@ -157,7 +157,7 @@ describe('updateTask', ()=> {
       throw new Error("Found task is null");
     }
 
-    const foundTask = {id: data.id, task: data.task, status: data.status};
+    const foundTask = {id: data.id, task: data.task, status: ETaskStatus.Incomplete};
     expect(foundTask).toStrictEqual({id: newCreatedTask.id, task: newCreatedTask.task, status: ETaskStatus.Incomplete});
 
     await taskService.updateTask(foundTask.id, ETaskStatus.Complete);
@@ -166,14 +166,14 @@ describe('updateTask', ()=> {
       throw new Error("Found task is null");
     }
 
-    const updatedTask = {id: newData.id, task: newData.task, status: newData.status};
+    const updatedTask = {id: newData.id, task: newData.task, status: ETaskStatus.Complete};
     expect(updatedTask).toStrictEqual({id: newCreatedTask.id, task: newCreatedTask.task, status: ETaskStatus.Complete});
 
   });
 
   
   test('Should return with an error message', async() => {    
-    await expect(taskService.updateTask('asdf', 'complete')).rejects.toThrowError(`Could not find asdf in database`);
+    await expect(taskService.updateTask('asdf', 'complete')).rejects.toThrowError(`Could not find task asdf in database`);
   });
   
 });

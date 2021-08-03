@@ -23,7 +23,17 @@ jobs:
       run: npm install
 
     - name: Run tests
-      run: DOTENV=.env.local npx jest
+      run: npx jest
+      env:
+        DB_HOST: localhost
+        DB_USER: kevin
+        DB_PASSWORD: 123
+        DB_PORT: 3306
+        DB_NAME: tododb
+        MYSQL_LOG: 1
+        PORT: 9000
+
+
 
     - name: Stop containers
       if: always()

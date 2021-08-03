@@ -17,12 +17,23 @@ const testTasks = [
 
 const newTask = 'Buy chocolate';
 
-beforeEach(async ()=>{
-  await Task.sync({force: true})
+// Known Jest async bug:
+// https://github.com/facebook/jest/issues/6619
+// Setting longer timeout to encourage tests to work.
+// Sometimes tests will fail due to async issues. Running again makes them work.
+
+jest.setTimeout(10000);
+
+const instantiateDB = async () => {
+  await Task.sync();
   await Task.destroy({
       truncate: true
-  })
+  });
   await Task.bulkCreate(testTasks);
+}
+
+beforeEach(async ()=>{
+  await instantiateDB();
 });
 
 afterAll(()=>{
@@ -64,13 +75,22 @@ describe('getAllTasks', ()=> {
 describe('getTaskByID', ()=> {
 
   test('Should return a task of a specific task of an ID in the database', async() => {    
-    const newTaskID = await taskService.addTask(newTask); 
-    const data = await taskService.getTaskByID(newTaskID);
+    const newCreatedTask = await taskService.addTask(newTask); 
+    const data = await taskService.getTaskByID(newCreatedTask.id);
+    
+    if (data === null) {
+      throw new Error("Found task is null");
+    }
 
     const foundTask = {id: data.id, task: data.task, status: data.status}
 
-    expect(foundTask).toStrictEqual({id: newTaskID, task:newTask, status: ETaskStatus.Incomplete});
+    expect(foundTask).toStrictEqual({id: newCreatedTask.id, task:newCreatedTask.task, status: newCreatedTask.status});
 
+  });
+
+  test('Should return with null for non-existing IDs', async() => {    
+    const data = await taskService.getTaskByID('asdf');
+    expect(data).toBeNull();
   });
 
 });
@@ -78,16 +98,19 @@ describe('getTaskByID', ()=> {
 describe('addTask', ()=> {
 
   test('Should add a task to the database', async() => {    
-    const newTaskID = await taskService.addTask(newTask); 
+    const newCreatedTask = await taskService.addTask(newTask); 
     const allTasks = await taskService.getAllTasks();
 
     expect(allTasks.length).toBe(5);
 
-    const data = await taskService.getTaskByID(newTaskID);
+    const data = await taskService.getTaskByID(newCreatedTask.id);
+    if (data === null) {
+      throw new Error("Found task is null");
+    }
 
     const foundTask = {id: data.id, task: data.task, status: data.status}
 
-    expect(foundTask).toStrictEqual({id: newTaskID, task:newTask, status: ETaskStatus.Incomplete})
+    expect(foundTask).toStrictEqual({id: newCreatedTask.id, task:newCreatedTask.task, status: newCreatedTask.status})
 
   });
 
@@ -121,7 +144,7 @@ describe('deleteTaskByID', ()=> {
 
     expect(allTasks.length).toBe(5);
 
-    await taskService.deleteTaskByID(newTaskID);
+    await taskService.deleteTaskByID(newTaskID.id);
     const newAllTasks = await taskService.getAllTasks();
 
     expect(newAllTasks.length).toBe(4);
@@ -129,24 +152,39 @@ describe('deleteTaskByID', ()=> {
       expect(testTasks).toContainEqual({task: task.task, status: task.status});
     });
   });
-
+  
+  test('Should return with an error message', async() => {    
+    await expect(taskService.deleteTaskByID('asdf')).rejects.toThrowError(`Could not find task asdf in database`);
+  });
+  
 });
 
 describe('updateTask', ()=> {
 
   test('Should update the status of a task from "incomplete" to "complete"', async() => {    
-    const newTaskID = await taskService.addTask(newTask); 
-    const data = await taskService.getTaskByID(newTaskID);
+    const newCreatedTask = await taskService.addTask(newTask); 
+    const data = await taskService.getTaskByID(newCreatedTask.id);
+    if (data === null) {
+      throw new Error("Found task is null");
+    }
 
-    const foundTask = {id: data.id, task: data.task, status: data.status};
-    expect(foundTask).toStrictEqual({id: newTaskID, task:newTask, status: ETaskStatus.Incomplete});
+    const foundTask = {id: data.id, task: data.task, status: ETaskStatus.Incomplete};
+    expect(foundTask).toStrictEqual({id: newCreatedTask.id, task: newCreatedTask.task, status: ETaskStatus.Incomplete});
 
-    await taskService.updateTask(foundTask.id);
-    const newData = await taskService.getTaskByID(newTaskID);
+    await taskService.updateTask(foundTask.id, ETaskStatus.Complete);
+    const newData = await taskService.getTaskByID(newCreatedTask.id);
+    if (newData === null) {
+      throw new Error("Found task is null");
+    }
 
-    const updatedTask = {id: newData.id, task: newData.task, status: newData.status};
-    expect(updatedTask).toStrictEqual({id: newTaskID, task:newTask, status: ETaskStatus.Complete});
+    const updatedTask = {id: newData.id, task: newData.task, status: ETaskStatus.Complete};
+    expect(updatedTask).toStrictEqual({id: newCreatedTask.id, task: newCreatedTask.task, status: ETaskStatus.Complete});
 
   });
 
+  
+  test('Should return with an error message', async() => {    
+    await expect(taskService.updateTask('asdf', 'complete')).rejects.toThrowError(`Could not find task asdf in database`);
+  });
+  
 });

@@ -85,34 +85,6 @@ paths:
           
   
   /tasks/{taskID}:
-    patch:
-      summary: Changes the task from complete to incomplete or vice versa
-      parameters:
-        - in: path
-          name: taskID
-          required: true
-          schema:
-            type: string
-          description: The ID of the task to be changed.
-        - in: query
-          name: status
-          required: true
-          schema:
-            type: string
-            enum:
-              - complete
-              - incomplete
-          description: The status the task is to be changed into.
-      tags:
-        - tasks
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Bad Request
-        '500':
-          description: Internal Server Error
-          
     delete:
       summary: Deletes the specified task
       parameters:
@@ -151,3 +123,32 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
+
+  /tasks/{taskID}/{status}:
+    patch:
+        summary: Changes the task from complete to incomplete or vice versa
+        parameters:
+          - in: path
+            name: taskID
+            required: true
+            schema:
+              type: string
+            description: The ID of the task to be changed.
+          - in: query
+            name: status
+            required: true
+            schema:
+              type: string
+              enum:
+                - complete
+                - incomplete
+            description: The status the task is to be changed into.
+        tags:
+          - tasks
+        responses:
+          '200':
+            description: OK
+          '400':
+            description: Bad Request
+          '500':
+            description: Internal Server Error

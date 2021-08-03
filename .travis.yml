@@ -6,7 +6,6 @@ services:
   - docker
 
 before_install:
-  - npm i -g npm@version-number
   - docker-compose up -d mysql
 
 script:

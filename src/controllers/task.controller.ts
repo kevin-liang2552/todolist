@@ -13,7 +13,7 @@ export const getTaskByStatus = async (req: Request, res: Response): Promise<void
 
   const status = req.params?.status;
 
-  if (status !== ETaskStatus.Complete && status !== ETaskStatus.Incomplete) {
+  if (![ETaskStatus.Complete,ETaskStatus.Incomplete].some(t=>t === status)) {
     res.status(400).send('Not a valid status');
   } else {
     const tasks = await taskService.getTaskByStatus(status);
@@ -26,8 +26,9 @@ export const addTask = async (req: Request, res: Response): Promise<void> => {
     
   const data: string = req.body?.task;
 
-  if (data === undefined){
+  if (!data){
     res.status(400).send('Missing required field: task');
+    return;
   } else {
     const newTaskID = await taskService.addTask(data);
     res.status(200).send({ id: newTaskID.id });
@@ -51,7 +52,7 @@ export const deleteTaskByStatus = async (req: Request, res: Response): Promise<v
     
   const status: string = req.params?.status;
 
-  if (status !== ETaskStatus.Complete && status !== ETaskStatus.Incomplete) {
+  if (![ETaskStatus.Complete,ETaskStatus.Incomplete].some(t=>t === status)) {
     res.status(400).send('Not a valid status');
   } else {
     await taskService.deleteTaskByStatus(status);
@@ -67,7 +68,7 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
 
   try{
 
-    if (status !== ETaskStatus.Complete && status !== ETaskStatus.Incomplete) {
+    if (![ETaskStatus.Complete,ETaskStatus.Incomplete].some(t=>t === status)) {
       throw(new Error('Not a valid Status'));
     } 
     

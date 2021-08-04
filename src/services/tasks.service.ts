@@ -49,7 +49,7 @@ export const updateTask = async (id: string, status: string): Promise<void> => {
         throw new Error(`Could not find task ${id} in database`);
     }
 
-    Task.update({status: status},{
+    await Task.update({status: status},{
         where:{ id }
     });
 

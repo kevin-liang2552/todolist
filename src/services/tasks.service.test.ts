@@ -22,7 +22,7 @@ const newTask = 'Buy chocolate';
 // Setting longer timeout to encourage tests to work.
 // Sometimes tests will fail due to async issues. Running again makes them work.
 
-jest.setTimeout(10000);
+jest.setTimeout(100000);
 
 const instantiateDB = async () => {
   await Task.sync();
@@ -36,28 +36,24 @@ beforeEach(async ()=>{
   await instantiateDB();
 });
 
-afterAll(()=>{
-  sequelize.close();
+afterAll(async ()=>{
+  await sequelize.close();
 });
 
 describe('getTaskByStatus', ()=> {
 
+  const testGet = async (status : string, expectedNum: number) : Promise<void> => {
+    const tasks = await taskService.getTaskByStatus(status); 
+    expect(tasks).toHaveLength(expectedNum);
+    expect(tasks.every(t=>t.status === status)).toBeTruthy();
+  }
+
   test('Should return only incomplete', async() => {        
-    const tasks = await taskService.getTaskByStatus(ETaskStatus.Incomplete); 
-    expect(tasks).toHaveLength(3)
-    tasks.forEach((task)=>{
-      expect(task.status).toBe(ETaskStatus.Incomplete);
-      expect(testTasks).toContainEqual({task: task.task, status: task.status});
-    });
+    testGet(ETaskStatus.Incomplete, 3);
   });
 
   test('Should return only complete', async() => {
-    const tasks = await taskService.getTaskByStatus(ETaskStatus.Complete); 
-    expect(tasks).toHaveLength(1);
-    tasks.forEach((task)=>{
-      expect(task.status).toBe(ETaskStatus.Complete);
-      expect(testTasks).toContainEqual({task: task.task, status: task.status});
-    });
+    testGet(ETaskStatus.Complete, 1);
   });
 });
 
@@ -75,14 +71,8 @@ describe('getAllTasks', ()=> {
 describe('getTaskByID', ()=> {
 
   test('Should return a task of a specific task of an ID in the database', async() => {    
-    const newCreatedTask = await taskService.addTask(newTask); 
-    const data = await taskService.getTaskByID(newCreatedTask.id);
-    
-    if (data === null) {
-      throw new Error("Found task is null");
-    }
-
-    const foundTask = {id: data.id, task: data.task, status: data.status}
+    const newCreatedTask = await taskService.addTask(newTask);
+    const foundTask = {id: newCreatedTask.id, task: newTask, status: ETaskStatus.Incomplete}
 
     expect(foundTask).toStrictEqual({id: newCreatedTask.id, task:newCreatedTask.task, status: newCreatedTask.status});
 
@@ -163,25 +153,17 @@ describe('updateTask', ()=> {
 
   test('Should update the status of a task from "incomplete" to "complete"', async() => {    
     const newCreatedTask = await taskService.addTask(newTask); 
-    const data = await taskService.getTaskByID(newCreatedTask.id);
-    if (data === null) {
-      throw new Error("Found task is null");
-    }
 
-    const foundTask = {id: data.id, task: data.task, status: ETaskStatus.Incomplete};
-    expect(foundTask).toStrictEqual({id: newCreatedTask.id, task: newCreatedTask.task, status: ETaskStatus.Incomplete});
+    const foundTask = {id: newCreatedTask.id, task: newTask, status: ETaskStatus.Incomplete};
+    expect(foundTask).toStrictEqual({id: newCreatedTask.id, task:newCreatedTask.task, status: newCreatedTask.status});
 
-    await taskService.updateTask(foundTask.id, ETaskStatus.Complete);
-    const newData = await taskService.getTaskByID(newCreatedTask.id);
-    if (newData === null) {
-      throw new Error("Found task is null");
-    }
+    await taskService.updateTask(newCreatedTask.id, ETaskStatus.Complete);
 
-    const updatedTask = {id: newData.id, task: newData.task, status: ETaskStatus.Complete};
-    expect(updatedTask).toStrictEqual({id: newCreatedTask.id, task: newCreatedTask.task, status: ETaskStatus.Complete});
-
+    const allCompleteTasks = await taskService.getTaskByStatus(ETaskStatus.Complete);
+    expect(allCompleteTasks.length).toBe(2);
+    expect(allCompleteTasks.every(t=>t.status === ETaskStatus.Complete)).toBeTruthy();
+    
   });
-
   
   test('Should return with an error message', async() => {    
     await expect(taskService.updateTask('asdf', 'complete')).rejects.toThrowError(`Could not find task asdf in database`);

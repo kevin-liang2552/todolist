@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { ETaskStatus } from '../models/share';
 import { taskService } from '../services'
+import {NextFunction} from 'express'
 
 export const getAllTasks = async (_: any, res: Response): Promise<void> => {
 
@@ -29,21 +30,19 @@ export const addTask = async (req: Request, res: Response): Promise<void> => {
   if (!data){
     res.status(400).send('Missing required field: task');
     return;
-  } else {
-    const newTaskID = await taskService.addTask(data);
-    res.status(200).send({ id: newTaskID.id });
-  }
-
+  } 
+  const newTaskID = await taskService.addTask(data);
+  res.status(200).send({ id: newTaskID.id });
 }
 
-export const deleteTaskByID = async (req: Request, res: Response): Promise<void> => {
+export const deleteTaskByID = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     
   const id = req.params?.id;
   try{
     await taskService.deleteTaskByID(id);
     res.status(200).send();
   }catch(err){
-    res.status(400).send(err);
+    next(err);
   }
   
 }
@@ -61,7 +60,7 @@ export const deleteTaskByStatus = async (req: Request, res: Response): Promise<v
 
 }
 
-export const updateTask = async (req: Request, res: Response): Promise<void> => {
+export const updateTask = async (req: Request, res: Response, next:NextFunction): Promise<void> => {
     
   const id: string = req.params?.id;
   const status: string = req.params?.status;
@@ -76,7 +75,7 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
     res.status(200).send();
     
   }catch(err){
-    res.status(400).send(err);
+    next(err);
   }
 
 }

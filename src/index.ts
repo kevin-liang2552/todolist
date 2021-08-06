@@ -4,9 +4,11 @@ import app from './app'
 const port = process.env.PORT;
 
 const init = () => {
-  app.listen(port, () => {
+  return app.listen(port, () => {
     console.log(`Hello World! Running on port ${port}`);
   });
 }
 
-Promise.resolve(init());
+const server = init();
+
+export default server;

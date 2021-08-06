@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "ts-node src/index.ts",
     "lint": "eslint src/ --ext .ts",
-    "test": "jest",
+    "test": "DOTENV=.env.local npx jest",
     "clean": "rm -rf dist build package",
     "ts-node": "ts-node",
     "build": "tsc -p tsconfig.json",

@@ -1,4 +1,11 @@
-image: node:12
+image: docker:latest
+
+services:
+  - docker:dind
+
+before_script:
+  - docker info
+  - docker-compose --version
 
 cache:
   paths:
@@ -6,26 +13,10 @@ cache:
 
 stages:
   - test
-  - deploy
 
 lint-and-test:
   stage: test
   script:
-    - yarn install
-    - yarn add -D esbuild
-    - yarn test
-    - yarn lint
-    - yarn build-all
-
-# Deploy docs to Gitlab pages
-pages:
-  stage: deploy
-  only:
-    - master
-  script:
-    - yarn install
-    - yarn docs
-    - mv docs public
-  artifacts:
-    paths:
-      - public
+    - apk add --no-cache docker-compose
+    - docker-compose up -d mysql
+    - DOTENV=.env.local npx jest
